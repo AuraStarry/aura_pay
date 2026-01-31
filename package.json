@@ -1,0 +1,16 @@
+{
+  "name": "aura_pay",
+  "version": "1.0.0",
+  "description": "Multi-product payment API powered by Supabase",
+  "main": "api/index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["payment", "api", "supabase", "vercel"],
+  "author": "Aura",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}
