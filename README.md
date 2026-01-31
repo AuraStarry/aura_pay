@@ -46,12 +46,25 @@ SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_key
 ```
 
+## Dashboard
+
+開啟 `dashboard.html` 即可查看付款紀錄。
+
+可透過 URL 參數指定 Supabase 設定：
+```
+dashboard.html?url=https://xxx.supabase.co&key=your_key
+```
+
+預設使用 Aura's Todo project 的設定。
+
 ## 部署
 
 ```bash
 npm install
 vercel --prod
 ```
+
+Dashboard 可直接部署到 Vercel 或任何靜態託管服務。
 
 ## Supabase Schema
 
