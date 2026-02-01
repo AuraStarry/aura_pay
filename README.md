@@ -7,6 +7,8 @@ Multi-product payment dashboard powered by Next.js 15 + Supabase.
 - 💰 Real-time payment dashboard
 - 📊 Revenue analytics & stats
 - 🔍 Filter orders by status & email
+- 🛠️ Product management admin panel
+- 📦 Create/edit/delete service products
 - ⚡ Serverless API routes (Vercel-ready)
 - 🎨 Modern UI with Tailwind CSS
 
@@ -25,9 +27,11 @@ aura_pay/
 ├── app/
 │   ├── api/              # Serverless API routes
 │   │   ├── route.ts      # Health check
-│   │   ├── products/     # GET products
+│   │   ├── products/     # CRUD products
 │   │   ├── checkout/     # POST create order
 │   │   └── webhook/      # POST payment callback
+│   ├── admin/            # Admin panel
+│   │   └── page.tsx      # Product management UI
 │   ├── layout.tsx        # Root layout
 │   ├── page.tsx          # Dashboard UI
 │   └── globals.css       # Tailwind styles
@@ -82,6 +86,9 @@ Health check endpoint.
 ### `GET /api/products`
 Get all active products.
 
+**Query Parameters:**
+- `all=true` - Include inactive products (for admin)
+
 **Response:**
 ```json
 {
@@ -89,11 +96,59 @@ Get all active products.
     {
       "id": "uuid",
       "name": "Product Name",
+      "sku": "PLAN-PREMIUM-001",
       "price": 99.99,
       "currency": "USD",
-      "active": true
+      "active": true,
+      "description": "Premium plan features",
+      "metadata": {}
     }
   ]
+}
+```
+
+### `POST /api/products`
+Create a new product.
+
+**Request Body:**
+```json
+{
+  "name": "Premium Plan",
+  "sku": "PLAN-PREMIUM-001",
+  "price": 99.99,
+  "currency": "USD",
+  "active": true,
+  "description": "Premium plan features",
+  "metadata": {}
+}
+```
+
+**Response:**
+```json
+{
+  "product": { ... }
+}
+```
+
+### `PATCH /api/products`
+Update an existing product.
+
+**Request Body:**
+```json
+{
+  "id": "uuid",
+  "price": 89.99,
+  "active": false
+}
+```
+
+### `DELETE /api/products`
+Delete a product.
+
+**Request Body:**
+```json
+{
+  "id": "uuid"
 }
 ```
 

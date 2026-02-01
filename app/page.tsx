@@ -84,6 +84,14 @@ export default function Dashboard() {
         <header className="text-center text-white mb-8">
           <h1 className="text-4xl font-bold mb-2">💰 Aura Pay Dashboard</h1>
           <p className="text-lg opacity-90">Payment Records & Analytics</p>
+          <div className="mt-4">
+            <a
+              href="/admin"
+              className="inline-block bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg font-medium transition"
+            >
+              🛠️ Manage Products
+            </a>
+          </div>
         </header>
 
         {/* Stats */}

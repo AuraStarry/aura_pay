@@ -4,5 +4,6 @@
   "/api/products/route": "/api/products",
   "/api/route": "/api",
   "/api/webhook/route": "/api/webhook",
+  "/admin/page": "/admin",
   "/page": "/"
 }
