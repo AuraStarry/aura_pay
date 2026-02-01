@@ -1,16 +1,36 @@
 {
   "name": "aura_pay",
-  "version": "1.0.0",
-  "description": "Multi-product payment API powered by Supabase",
-  "main": "api/index.js",
+  "version": "2.0.0",
+  "description": "Multi-product payment dashboard powered by Next.js + Supabase",
+  "private": true,
   "scripts": {
-    "dev": "vercel dev",
-    "deploy": "vercel --prod"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "keywords": ["payment", "api", "supabase", "vercel"],
+  "keywords": [
+    "payment",
+    "dashboard",
+    "supabase",
+    "nextjs",
+    "vercel"
+  ],
   "author": "Aura",
   "license": "MIT",
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.39.0",
+    "next": "^15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "5.9.3"
   }
 }

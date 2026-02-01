@@ -1,75 +1,177 @@
-# Aura Pay
+# Aura Pay Dashboard
 
-Multi-product payment API powered by Supabase + Vercel Serverless.
+Multi-product payment dashboard powered by Next.js 15 + Supabase.
 
-## 功能
+## Features
 
-- ✅ 產品管理
-- ✅ 訂單建立
-- ✅ Webhook 回調處理
-- 🔄 支援多種支付方式（擴充中）
+- 💰 Real-time payment dashboard
+- 📊 Revenue analytics & stats
+- 🔍 Filter orders by status & email
+- ⚡ Serverless API routes (Vercel-ready)
+- 🎨 Modern UI with Tailwind CSS
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Database:** Supabase
+- **Deployment:** Vercel
+
+## Project Structure
+
+```
+aura_pay/
+├── app/
+│   ├── api/              # Serverless API routes
+│   │   ├── route.ts      # Health check
+│   │   ├── products/     # GET products
+│   │   ├── checkout/     # POST create order
+│   │   └── webhook/      # POST payment callback
+│   ├── layout.tsx        # Root layout
+│   ├── page.tsx          # Dashboard UI
+│   └── globals.css       # Tailwind styles
+├── public/
+│   └── old-dashboard.html  # Legacy dashboard (archived)
+├── schema.sql            # Database schema
+├── .env.local            # Environment variables (gitignored)
+└── .env.example          # Example env config
+
+```
+
+## Setup
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Configure environment:**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your Supabase credentials
+   ```
+
+3. **Run development server:**
+   ```bash
+   npm run dev
+   ```
+   Open http://localhost:3000
+
+4. **Build for production:**
+   ```bash
+   npm run build
+   npm start
+   ```
 
 ## API Endpoints
 
 ### `GET /api`
-健康檢查
+Health check endpoint.
 
-### `GET /api/products`
-取得所有啟用的產品
-
-### `POST /api/checkout`
-建立支付訂單
+**Response:**
 ```json
 {
-  "product_id": 1,
+  "status": "ok",
+  "service": "Aura Pay API",
+  "version": "2.0.0",
+  "timestamp": "2026-02-01T19:00:00.000Z"
+}
+```
+
+### `GET /api/products`
+Get all active products.
+
+**Response:**
+```json
+{
+  "products": [
+    {
+      "id": "uuid",
+      "name": "Product Name",
+      "price": 99.99,
+      "currency": "USD",
+      "active": true
+    }
+  ]
+}
+```
+
+### `POST /api/checkout`
+Create a new payment order.
+
+**Request Body:**
+```json
+{
+  "product_id": "uuid",
   "quantity": 1,
   "customer_email": "user@example.com",
   "metadata": {}
 }
 ```
 
+**Response:**
+```json
+{
+  "order_id": "uuid",
+  "amount": 99.99,
+  "currency": "USD",
+  "status": "pending"
+}
+```
+
 ### `POST /api/webhook`
-接收支付回調
+Payment gateway webhook callback.
+
+**Request Body:**
 ```json
 {
   "order_id": "uuid",
   "status": "completed",
   "transaction_id": "txn_123",
-  "payment_method": "credit_card"
+  "payment_method": "card"
 }
 ```
 
-## 環境變數
-
-```env
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_key
+**Response:**
+```json
+{
+  "success": true,
+  "order": { ... }
+}
 ```
 
-## Dashboard
+## Deployment
 
-開啟 `dashboard.html` 即可查看付款紀錄。
+### Vercel (Recommended)
 
-可透過 URL 參數指定 Supabase 設定：
-```
-dashboard.html?url=https://xxx.supabase.co&key=your_key
-```
+1. Push to GitHub
+2. Import project on Vercel
+3. Add environment variables:
+   - `SUPABASE_URL`
+   - `SUPABASE_KEY`
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_KEY`
+4. Deploy
 
-預設使用 Aura's Todo project 的設定。
+## Database Schema
 
-## 部署
+See `schema.sql` for the Supabase database setup.
 
-```bash
-npm install
-vercel --prod
-```
+## Migration from v1
 
-Dashboard 可直接部署到 Vercel 或任何靜態託管服務。
+The old dashboard (`dashboard.html`) has been archived to `public/old-dashboard.html`.
+The legacy `/api/*.js` files have been migrated to Next.js App Router format.
 
-## Supabase Schema
+## Version History
 
-見 `schema.sql` 建立所需資料表。
+- **v2.0.0** (2026-02-01): Next.js + TypeScript rewrite
+- **v1.0.0**: Initial HTML + Vercel Serverless version
+
+## License
+
+MIT
 
 ---
 
-Built by Aura ✨
+Built with ✨ by Aura
