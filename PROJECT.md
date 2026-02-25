@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: 建立正式專案管理節奏（PROJECT.md）＋ 定義下一輪優先開發項目
-- **最後更新**: 2026-02-25（初始化 Aura Pay 專案管理檔）
+- **DOING**: TODO #7 API 合約驗證（request validation + error shape 統一）
+- **最後更新**: 2026-02-25（完成 TODO #6 版本對齊與 build warning 清理）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -17,10 +17,7 @@
 5. [x] Supabase schema 建置（`schema.sql`）
 
 ### ✅ 穩定化（近期優先）
-6. [ ] 套件版本清理：對齊 `next` 與 `@next/swc` 版本，消除 build warning
-   - [x] Sub 1: 鎖定並重建 Next 相關依賴（刷新 lockfile）
-   - [x] Sub 2: 驗證 lockfile 中 `next`/`@next/swc` 版本一致
-   - [x] Sub 3: 重新 build 確認 warning 消失
+6. [x] 套件版本清理：對齊 `next` 與 `@next/swc` 版本，消除 build warning
 7. [ ] 補 API 合約驗證（request body validation / error shape 統一）
 8. [ ] 建立最小測試集（至少涵蓋 products + checkout）
 9. [ ] 補齊 `.env.example` 說明欄位與部署必要變數對照
@@ -44,7 +41,7 @@
   - `c4b7015` refactor: Migrate to Next.js 15 + TypeScript
   - `05a05d1` Add payment dashboard with stats and order listing
   - `8efc56c` Initial commit: Aura Pay API with Supabase + Vercel
-- **建置狀態**：`npm run build` 成功（2026-02-25），但有 `@next/swc` 版本不一致警告
+- **建置狀態**：`npm run build` 成功（2026-02-25），`@next/swc` mismatch warning 已清除（next/swc = 15.5.12）
 
 ## 產品目標（當前版本）
 
