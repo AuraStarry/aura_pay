@@ -20,7 +20,7 @@
 6. [ ] 套件版本清理：對齊 `next` 與 `@next/swc` 版本，消除 build warning
    - [x] Sub 1: 鎖定並重建 Next 相關依賴（刷新 lockfile）
    - [x] Sub 2: 驗證 lockfile 中 `next`/`@next/swc` 版本一致
-   - [ ] Sub 3: 重新 build 確認 warning 消失
+   - [x] Sub 3: 重新 build 確認 warning 消失
 7. [ ] 補 API 合約驗證（request body validation / error shape 統一）
 8. [ ] 建立最小測試集（至少涵蓋 products + checkout）
 9. [ ] 補齊 `.env.example` 說明欄位與部署必要變數對照
