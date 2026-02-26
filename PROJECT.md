@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #12 建立 staging→production 部署檢查清單
-- **最後更新**: 2026-02-26（完成 TODO #13 管理介面與 API 對齊新資料模型）
+- **DOING**: TODO #14 Paddle webhook signature 驗證與事件映射（交易/訂閱）
+- **最後更新**: 2026-02-26（完成 TODO #12 staging→production 部署檢查清單）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -25,11 +25,9 @@
 ### 🚀 上線品質（下一階段）
 10. [x] 加入基本監控與錯誤追蹤（至少 server log 結構化）
 11. [x] 補 admin 存取保護（Auth / role gate）
-12. [ ] 建立 staging→production 部署檢查清單
-   - [x] Sub 1: 產出 `docs/DEPLOY_CHECKLIST.md`（staging / production gate）
-   - [x] Sub 2: README 補上部署檢查清單入口與最小上線流程
-   - [ ] Sub 3: 以當前模型驗證 checklist 覆蓋面並更新 PROJECT 狀態
+12. [x] 建立 staging→production 部署檢查清單
 13. [x] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
+14. [ ] Paddle webhook signature 驗證與事件映射（交易/訂閱）
 
 ---
 
@@ -48,7 +46,7 @@
 - **建置狀態**：`npm run build` 成功（2026-02-26），`npm test`（Vitest，products+checkout）通過
 - **監控狀態**：API 已有結構化 log（level/event/requestId/route/durationMs）與統一錯誤記錄
 - **權限狀態**：`/api/products` 已套用 viewer/admin token role gate；`/admin` 改走受保護 API token 流程
-- **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md` 已對齊目前 MVP + Paddle 預留變數
+- **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md`、`docs/DEPLOY_CHECKLIST.md` 已對齊目前 MVP + 上線流程
 - **Paddle 模型狀態**：`sql/2026-02-26_paddle_minimal_model.sql` 已在 Supabase 套用成功；`checkout/webhook` 已對齊 price/customer/idempotency
 - **Admin 狀態**：新增 `/api/product-prices`，`/admin` 已支援 Product + Default Price 建立與價格列表顯示
 
