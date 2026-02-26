@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #7 API 合約驗證（request validation + error shape 統一）
-- **最後更新**: 2026-02-25（完成 TODO #6 版本對齊與 build warning 清理）
+- **DOING**: TODO #8 建立最小測試集（products + checkout）
+- **最後更新**: 2026-02-26（完成 TODO #7 API 合約驗證與 error shape 統一）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -18,10 +18,7 @@
 
 ### ✅ 穩定化（近期優先）
 6. [x] 套件版本清理：對齊 `next` 與 `@next/swc` 版本，消除 build warning
-7. [ ] 補 API 合約驗證（request body validation / error shape 統一）
-   - [x] Sub 1: 建立共用 API response contract 與驗證 helper
-   - [x] Sub 2: 套用到 `/api/products`（GET/POST/PATCH/DELETE）
-   - [x] Sub 3: 套用到 `/api/checkout`、`/api/webhook` 並完成 build 驗證
+7. [x] 補 API 合約驗證（request body validation / error shape 統一）
 8. [ ] 建立最小測試集（至少涵蓋 products + checkout）
 9. [ ] 補齊 `.env.example` 說明欄位與部署必要變數對照
 
@@ -44,7 +41,7 @@
   - `c4b7015` refactor: Migrate to Next.js 15 + TypeScript
   - `05a05d1` Add payment dashboard with stats and order listing
   - `8efc56c` Initial commit: Aura Pay API with Supabase + Vercel
-- **建置狀態**：`npm run build` 成功（2026-02-25），`@next/swc` mismatch warning 已清除（next/swc = 15.5.12）
+- **建置狀態**：`npm run build` 成功（2026-02-26），目前 API contract 驗證可通過 type-check 與 production build
 
 ## 產品目標（當前版本）
 
