@@ -221,6 +221,8 @@ Payment gateway webhook callback.
      - `SUPABASE_KEY`
      - `NEXT_PUBLIC_SUPABASE_URL`
      - `NEXT_PUBLIC_SUPABASE_KEY`
+     - `ADMIN_READ_TOKEN`
+     - `ADMIN_WRITE_TOKEN`
    - Paddle phase (upcoming):
      - `PADDLE_API_KEY`
      - `PADDLE_WEBHOOK_SECRET`

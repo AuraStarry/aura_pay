@@ -10,6 +10,8 @@ This file is the single reference for environment variables across local develop
 | `SUPABASE_KEY` | Server | Yes | Supabase service-role key used by server-side routes |
 | `NEXT_PUBLIC_SUPABASE_URL` | Client+Server | Yes | Public Supabase URL used by frontend |
 | `NEXT_PUBLIC_SUPABASE_KEY` | Client+Server | Yes | Supabase anon/public key used by frontend |
+| `ADMIN_READ_TOKEN` | Server | Yes | Bearer token for read-only admin product access |
+| `ADMIN_WRITE_TOKEN` | Server | Yes | Bearer token for product mutations (admin role) |
 
 ## 2) Paddle phase (planned, not yet wired in runtime)
 
@@ -29,6 +31,7 @@ This file is the single reference for environment variables across local develop
    ```
 2. Fill required MVP vars first.
 3. Keep Paddle vars as placeholders until Paddle adapter tasks begin.
+4. For `/admin`, paste `ADMIN_READ_TOKEN` or `ADMIN_WRITE_TOKEN` in the token box (stored in browser localStorage only on that device).
 
 ## 4) Vercel mapping
 

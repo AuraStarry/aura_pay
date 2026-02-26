@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #11 補 admin 存取保護（Auth / role gate）
-- **最後更新**: 2026-02-26（完成 TODO #10 結構化 logging 與 request telemetry）
+- **DOING**: TODO #12 建立 staging→production 部署檢查清單
+- **最後更新**: 2026-02-26（完成 TODO #11 admin auth/role gate）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -24,10 +24,7 @@
 
 ### 🚀 上線品質（下一階段）
 10. [x] 加入基本監控與錯誤追蹤（至少 server log 結構化）
-11. [ ] 補 admin 存取保護（Auth / role gate）
-   - [x] Sub 1: 建立 admin token auth helper（viewer/admin 角色）
-   - [x] Sub 2: 套用 `/api/products` role gate（GET=viewer+ / mutate=admin）
-   - [ ] Sub 3: 調整 `/admin` 使用受保護 API + token 流程，並驗證 test/build
+11. [x] 補 admin 存取保護（Auth / role gate）
 12. [ ] 建立 staging→production 部署檢查清單
 
 ---
@@ -46,6 +43,7 @@
   - `8efc56c` Initial commit: Aura Pay API with Supabase + Vercel
 - **建置狀態**：`npm run build` 成功（2026-02-26），`npm test`（Vitest，products+checkout）通過
 - **監控狀態**：API 已有結構化 log（level/event/requestId/route/durationMs）與統一錯誤記錄
+- **權限狀態**：`/api/products` 已套用 viewer/admin token role gate；`/admin` 改走受保護 API token 流程
 - **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md` 已對齊目前 MVP + Paddle 預留變數
 
 ## 產品目標（當前版本）
