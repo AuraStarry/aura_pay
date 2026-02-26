@@ -24,6 +24,9 @@
 
 ### 🚀 上線品質（下一階段）
 10. [ ] 加入基本監控與錯誤追蹤（至少 server log 結構化）
+   - [x] Sub 1: 建立共用結構化 logger（level/event/context/error）
+   - [ ] Sub 2: 套用到 API error handling 與主要路由（products/checkout/webhook）
+   - [ ] Sub 3: 補上 request-id 與基本 latency log，並驗證 test/build
 11. [ ] 補 admin 存取保護（Auth / role gate）
 12. [ ] 建立 staging→production 部署檢查清單
 

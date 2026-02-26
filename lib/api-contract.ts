@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { log, normalizeError } from '@/lib/logger';
 
 export type ApiErrorCode =
   | 'bad_request'
@@ -51,12 +52,30 @@ export function fail(status: number, code: ApiErrorCode, message: string, detail
   );
 }
 
-export function handleApiError(error: unknown, fallbackMessage: string) {
+export function handleApiError(
+  error: unknown,
+  fallbackMessage: string,
+  meta?: { requestId?: string; route?: string; startedAt?: number }
+) {
+  const durationMs = meta?.startedAt ? Date.now() - meta.startedAt : undefined;
+
   if (error instanceof HttpError) {
+    log('warn', 'api.validation_or_http_error', error.message, {
+      requestId: meta?.requestId,
+      route: meta?.route,
+      durationMs,
+      context: { code: error.code, status: error.status, details: error.details },
+    });
     return fail(error.status, error.code, error.message, error.details);
   }
 
-  console.error(fallbackMessage, error);
+  log('error', 'api.unhandled_error', fallbackMessage, {
+    requestId: meta?.requestId,
+    route: meta?.route,
+    durationMs,
+    error: normalizeError(error),
+  });
+
   return fail(500, 'internal_error', fallbackMessage);
 }
 
