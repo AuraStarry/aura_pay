@@ -231,7 +231,8 @@ Payment gateway webhook callback.
      - `NEXT_PUBLIC_APP_URL`
 4. Deploy
 
-For full variable definitions and deployment mapping, see `docs/ENVIRONMENT.md`. 
+For full variable definitions and deployment mapping, see `docs/ENVIRONMENT.md`.
+Before promoting staging to production, run `docs/DEPLOY_CHECKLIST.md` end-to-end. 
 
 ## Database Schema
 
