@@ -5,7 +5,6 @@ import {
   handleApiError,
   ok,
   optionalBoolean,
-  requireNumber,
   requireString,
   safeJson,
 } from '@/lib/api-contract';
@@ -16,10 +15,8 @@ const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KE
 
 type ProductCreateBody = {
   name?: unknown;
+  slug?: unknown;
   sku?: unknown;
-  price?: unknown;
-  currency?: unknown;
-  billing_mode?: unknown;
   active?: unknown;
   description?: unknown;
   metadata?: unknown;
@@ -28,10 +25,8 @@ type ProductCreateBody = {
 type ProductUpdateBody = {
   id?: unknown;
   name?: unknown;
+  slug?: unknown;
   sku?: unknown;
-  price?: unknown;
-  currency?: unknown;
-  billing_mode?: unknown;
   active?: unknown;
   description?: unknown;
   metadata?: unknown;
@@ -81,24 +76,17 @@ export async function POST(request: NextRequest) {
     const body = await safeJson<ProductCreateBody>(request);
 
     const name = requireString(body.name, 'name');
-    const sku = requireString(body.sku, 'sku');
-    const price = requireNumber(body.price, 'price');
-    const currency = body.currency === undefined ? 'USD' : requireString(body.currency, 'currency');
-    const billingMode = body.billing_mode === undefined ? 'one_time' : requireString(body.billing_mode, 'billing_mode');
-    if (!['one_time', 'subscription'].includes(billingMode)) {
-      throw new HttpError(400, 'validation_error', 'Field `billing_mode` must be one of: one_time, subscription');
-    }
+    const slug = body.slug === undefined ? null : requireString(body.slug, 'slug');
+    const sku = body.sku === undefined ? null : requireString(body.sku, 'sku');
     const active = body.active === undefined ? true : optionalBoolean(body.active, 'active');
 
     const { data, error } = await supabase
       .from('products')
       .insert({
         name,
+        slug,
         sku,
-        price,
-        currency,
         active,
-        billing_mode: billingMode,
         description: body.description,
         metadata: body.metadata,
       })
@@ -136,17 +124,9 @@ export async function PATCH(request: NextRequest) {
     const updates: Record<string, unknown> = {};
 
     if (body.name !== undefined) updates.name = requireString(body.name, 'name');
+    if (body.slug !== undefined) updates.slug = requireString(body.slug, 'slug');
     if (body.sku !== undefined) updates.sku = requireString(body.sku, 'sku');
-    if (body.price !== undefined) updates.price = requireNumber(body.price, 'price');
-    if (body.currency !== undefined) updates.currency = requireString(body.currency, 'currency');
     if (body.active !== undefined) updates.active = optionalBoolean(body.active, 'active');
-    if (body.billing_mode !== undefined) {
-      const billingMode = requireString(body.billing_mode, 'billing_mode');
-      if (!['one_time', 'subscription'].includes(billingMode)) {
-        throw new HttpError(400, 'validation_error', 'Field `billing_mode` must be one of: one_time, subscription');
-      }
-      updates.billing_mode = billingMode;
-    }
     if (body.description !== undefined) updates.description = body.description;
     if (body.metadata !== undefined) updates.metadata = body.metadata;
 

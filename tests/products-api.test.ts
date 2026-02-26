@@ -57,13 +57,13 @@ describe('/api/products POST', () => {
     const { POST } = await import('@/app/api/products/route');
 
     chain.single.mockResolvedValueOnce({
-      data: { id: 'p1', name: 'Pro', sku: 'pro', price: 10, currency: 'USD', active: true },
+      data: { id: 'p1', name: 'Pro', slug: 'pro', sku: 'pro', active: true },
       error: null,
     });
 
     const req = new Request('http://localhost/api/products', {
       method: 'POST',
-      body: JSON.stringify({ name: 'Pro', sku: 'pro', price: 10 }),
+      body: JSON.stringify({ name: 'Pro', slug: 'pro', sku: 'pro' }),
       headers: {
         'content-type': 'application/json',
         authorization: 'Bearer admin-token',

@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #13 Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
-- **最後更新**: 2026-02-26（完成 Sub 3：checkout/webhook 對齊新模型）
+- **DOING**: TODO #12 建立 staging→production 部署檢查清單
+- **最後更新**: 2026-02-26（完成 TODO #13 管理介面與 API 對齊新資料模型）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -26,11 +26,7 @@
 10. [x] 加入基本監控與錯誤追蹤（至少 server log 結構化）
 11. [x] 補 admin 存取保護（Auth / role gate）
 12. [ ] 建立 staging→production 部署檢查清單
-13. [ ] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
-   - [x] Sub 1: 定稿最小資料結構與欄位規則（避免過度設計）
-   - [x] Sub 2: 產出完整 schema.sql（fresh setup）與增量 migration（existing project）
-   - [x] Sub 3: API 對齊新模型（checkout/webhook 先支援 price/customer/event idempotency）
-   - [ ] Sub 4: 管理介面與測試樣本更新（products + prices）
+13. [x] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
 
 ---
 
@@ -51,6 +47,7 @@
 - **權限狀態**：`/api/products` 已套用 viewer/admin token role gate；`/admin` 改走受保護 API token 流程
 - **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md` 已對齊目前 MVP + Paddle 預留變數
 - **Paddle 模型狀態**：`sql/2026-02-26_paddle_minimal_model.sql` 已在 Supabase 套用成功；`checkout/webhook` 已對齊 price/customer/idempotency
+- **Admin 狀態**：新增 `/api/product-prices`，`/admin` 已支援 Product + Default Price 建立與價格列表顯示
 
 ## 產品目標（當前版本）
 
