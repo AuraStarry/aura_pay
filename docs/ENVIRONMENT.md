@@ -13,12 +13,12 @@ This file is the single reference for environment variables across local develop
 | `ADMIN_READ_TOKEN` | Server | Yes | Bearer token for read-only admin product access |
 | `ADMIN_WRITE_TOKEN` | Server | Yes | Bearer token for product mutations (admin role) |
 
-## 2) Paddle phase (planned, not yet wired in runtime)
+## 2) Paddle phase (partially wired: webhook signature + event mapping live)
 
 | Variable | Scope | Required | Description |
 |---|---|---:|---|
 | `PADDLE_API_KEY` | Server | Soon | Paddle API authentication key |
-| `PADDLE_WEBHOOK_SECRET` | Server | Soon | Signature verification secret for Paddle webhooks |
+| `PADDLE_WEBHOOK_SECRET` | Server | Yes (for webhook endpoint) | Signature verification secret for Paddle webhooks |
 | `PADDLE_ENV` | Server | Soon | `sandbox` or `production` |
 | `PADDLE_DEFAULT_CURRENCY` | Server | Soon | Fallback currency for prices/checkouts |
 | `NEXT_PUBLIC_APP_URL` | Client+Server | Soon | Public app URL for redirects/callback composition |

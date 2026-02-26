@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #14 Paddle webhook signature 驗證與事件映射（交易/訂閱）
-- **最後更新**: 2026-02-26（完成 TODO #15 對外串接文檔層）
+- **DOING**: TODO #16 建立對外授權查詢 API（給其他產品做 access check）
+- **最後更新**: 2026-02-26（完成 TODO #14 webhook signature + event mapping）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -27,11 +27,9 @@
 11. [x] 補 admin 存取保護（Auth / role gate）
 12. [x] 建立 staging→production 部署檢查清單
 13. [x] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
-14. [ ] Paddle webhook signature 驗證與事件映射（交易/訂閱）
-   - [x] Sub 1: 新增 Paddle webhook signature 驗證（`PADDLE_WEBHOOK_SECRET`）
-   - [x] Sub 2: 建立 transaction/subscription 事件到 order/subscription 狀態映射
-   - [ ] Sub 3: 更新整合文檔與環境需求，並驗證 test/build
+14. [x] Paddle webhook signature 驗證與事件映射（交易/訂閱）
 15. [x] 對外串接文檔層（供其他產品快速整合）
+16. [ ] 建立對外授權查詢 API（給其他產品做 access check）
 
 ---
 
@@ -51,7 +49,7 @@
 - **監控狀態**：API 已有結構化 log（level/event/requestId/route/durationMs）與統一錯誤記錄
 - **權限狀態**：`/api/products` 已套用 viewer/admin token role gate；`/admin` 改走受保護 API token 流程
 - **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md`、`docs/DEPLOY_CHECKLIST.md`、`docs/INTEGRATION_API.md`、`docs/INTEGRATION_CHANGE_POLICY.md` 已對齊目前 MVP + 上線流程
-- **Paddle 模型狀態**：`sql/2026-02-26_paddle_minimal_model.sql` 已在 Supabase 套用成功；`checkout/webhook` 已對齊 price/customer/idempotency
+- **Paddle 模型狀態**：`sql/2026-02-26_paddle_minimal_model.sql` 已在 Supabase 套用成功；`checkout/webhook` 已對齊 price/customer/idempotency + signature verification + 事件映射
 - **Admin 狀態**：新增 `/api/product-prices`，`/admin` 已支援 Product + Default Price 建立與價格列表顯示
 
 ## 產品目標（當前版本）

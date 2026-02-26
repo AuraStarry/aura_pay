@@ -1,6 +1,6 @@
 # INTEGRATION_API.md — Aura Pay Integration Guide
 
-> Integration Contract Version: v2026.02.26-1
+> Integration Contract Version: v2026.02.26-2
 > 給其他產品串接 Aura Pay 的單一入口文件。
 
 ## 1) Authentication
@@ -144,21 +144,42 @@ Common error codes:
 
 ### POST `/api/webhook`
 - Used by Paddle event ingestion layer
+- Signature required: `Paddle-Signature` header (validated with `PADDLE_WEBHOOK_SECRET`)
 - Supports event idempotency via `event_id`
-- Body (current minimal contract):
+- Body (Paddle envelope expected):
 ```json
 {
   "event_id": "evt_123",
   "event_type": "transaction.paid",
-  "order_id": "uuid",
-  "status": "paid",
-  "transaction_id": "txn_123",
-  "payment_method": "card",
-  "payload": {}
+  "data": {
+    "order_id": "uuid",
+    "transaction_id": "txn_123",
+    "payment_method": "card",
+    "subscription_id": "sub_123",
+    "current_period_start": "2026-02-01T00:00:00Z",
+    "current_period_end": "2026-03-01T00:00:00Z",
+    "cancel_at_period_end": false,
+    "canceled_at": null
+  }
 }
 ```
 
-## 4) Recommended Integration Flow
+## 4) Webhook Event Mapping (current)
+
+Order status mapping:
+- `transaction.paid` / `transaction.completed` → `orders.status = paid`
+- `transaction.payment_failed` → `orders.status = failed`
+- `transaction.refunded` → `orders.status = refunded`
+- `transaction.canceled` → `orders.status = canceled`
+
+Subscription status mapping:
+- `subscription.created` / `subscription.trialing` → `subscriptions.status = trialing`
+- `subscription.activated` / `subscription.resumed` → `subscriptions.status = active`
+- `subscription.past_due` → `subscriptions.status = past_due`
+- `subscription.paused` → `subscriptions.status = paused`
+- `subscription.canceled` → `subscriptions.status = canceled`
+
+## 5) Recommended Integration Flow
 
 1. Fetch active products + prices (`/api/products`, `/api/product-prices`)
 2. User selects a price plan
@@ -166,7 +187,7 @@ Common error codes:
 4. Payment provider callback -> `/api/webhook`
 5. Your product checks order/subscription state before granting access
 
-## 5) Data Model Entities (for integrators)
+## 6) Data Model Entities (for integrators)
 
 - `products`: catalog metadata
 - `product_prices`: plan-level pricing (`one_time` or `subscription`)
@@ -175,7 +196,7 @@ Common error codes:
 - `subscriptions`: active subscription state
 - `webhook_events`: idempotency and audit trail
 
-## 6) Notes
+## 7) Notes
 
 - Do not rely on undocumented fields.
 - Treat this document as canonical integration contract.
