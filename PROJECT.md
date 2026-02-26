@@ -21,7 +21,7 @@
 7. [x] 補 API 合約驗證（request body validation / error shape 統一）
 8. [ ] 建立最小測試集（至少涵蓋 products + checkout）
    - [x] Sub 1: 建立測試基礎設施（Vitest + scripts + config）
-   - [ ] Sub 2: 新增 products API 最小測試（validation + success）
+   - [x] Sub 2: 新增 products API 最小測試（validation + success）
    - [ ] Sub 3: 新增 checkout API 最小測試（validation + product-not-found + success）並驗證 build/test
 9. [ ] 補齊 `.env.example` 說明欄位與部署必要變數對照
 
