@@ -53,7 +53,8 @@ aura_pay/
 2. **Configure environment:**
    ```bash
    cp .env.example .env.local
-   # Edit .env.local with your Supabase credentials
+   # Fill required vars first (SUPABASE_* and NEXT_PUBLIC_SUPABASE_*)
+   # Paddle vars can stay as placeholders until Paddle integration phase
    ```
 
 3. **Run development server:**
@@ -92,18 +93,21 @@ Get all active products.
 **Response:**
 ```json
 {
-  "products": [
-    {
-      "id": "uuid",
-      "name": "Product Name",
-      "sku": "PLAN-PREMIUM-001",
-      "price": 99.99,
-      "currency": "USD",
-      "active": true,
-      "description": "Premium plan features",
-      "metadata": {}
-    }
-  ]
+  "ok": true,
+  "data": {
+    "products": [
+      {
+        "id": "uuid",
+        "name": "Product Name",
+        "sku": "PLAN-PREMIUM-001",
+        "price": 99.99,
+        "currency": "USD",
+        "active": true,
+        "description": "Premium plan features",
+        "metadata": {}
+      }
+    ]
+  }
 }
 ```
 
@@ -126,7 +130,10 @@ Create a new product.
 **Response:**
 ```json
 {
-  "product": { ... }
+  "ok": true,
+  "data": {
+    "product": { ... }
+  }
 }
 ```
 
@@ -168,10 +175,13 @@ Create a new payment order.
 **Response:**
 ```json
 {
-  "order_id": "uuid",
-  "amount": 99.99,
-  "currency": "USD",
-  "status": "pending"
+  "ok": true,
+  "data": {
+    "order_id": "uuid",
+    "amount": 99.99,
+    "currency": "USD",
+    "status": "pending"
+  }
 }
 ```
 
@@ -191,8 +201,11 @@ Payment gateway webhook callback.
 **Response:**
 ```json
 {
-  "success": true,
-  "order": { ... }
+  "ok": true,
+  "data": {
+    "success": true,
+    "order": { ... }
+  }
 }
 ```
 
@@ -203,11 +216,20 @@ Payment gateway webhook callback.
 1. Push to GitHub
 2. Import project on Vercel
 3. Add environment variables:
-   - `SUPABASE_URL`
-   - `SUPABASE_KEY`
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_KEY`
+   - Required now:
+     - `SUPABASE_URL`
+     - `SUPABASE_KEY`
+     - `NEXT_PUBLIC_SUPABASE_URL`
+     - `NEXT_PUBLIC_SUPABASE_KEY`
+   - Paddle phase (upcoming):
+     - `PADDLE_API_KEY`
+     - `PADDLE_WEBHOOK_SECRET`
+     - `PADDLE_ENV`
+     - `PADDLE_DEFAULT_CURRENCY`
+     - `NEXT_PUBLIC_APP_URL`
 4. Deploy
+
+For full variable definitions and deployment mapping, see `docs/ENVIRONMENT.md`. 
 
 ## Database Schema
 
