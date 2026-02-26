@@ -1,21 +1,29 @@
--- Aura Pay Database Schema (Paddle-ready minimal)
+-- Incremental migration for existing Aura Pay projects
 
 create extension if not exists pgcrypto;
 
--- Products (catalog level)
-create table if not exists public.products (
-  id bigserial primary key,
-  name text not null,
-  slug text unique,
-  sku text unique,
-  description text,
-  active boolean default true,
-  metadata jsonb,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
+alter table public.products
+  add column if not exists slug text;
 
--- Product prices / plans (one-time + subscription)
+alter table public.products
+  add column if not exists sku text;
+
+do $$ begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'products_slug_key'
+  ) then
+    alter table public.products add constraint products_slug_key unique (slug);
+  end if;
+end $$;
+
+do $$ begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'products_sku_key'
+  ) then
+    alter table public.products add constraint products_sku_key unique (sku);
+  end if;
+end $$;
+
 create table if not exists public.product_prices (
   id bigserial primary key,
   product_id bigint not null references public.products(id) on delete cascade,
@@ -38,7 +46,6 @@ create table if not exists public.product_prices (
   )
 );
 
--- Customers (deduplicated buyer identity)
 create table if not exists public.customers (
   id uuid primary key default gen_random_uuid(),
   email text not null unique,
@@ -49,29 +56,26 @@ create table if not exists public.customers (
   updated_at timestamptz default now()
 );
 
--- Orders (one-time + subscription invoices)
-create table if not exists public.orders (
-  id uuid primary key default gen_random_uuid(),
-  customer_id uuid references public.customers(id),
-  product_id bigint references public.products(id),
-  product_price_id bigint references public.product_prices(id),
-  quantity integer default 1,
-  customer_email text not null,
-  amount decimal(10, 2) not null,
-  currency text default 'USD',
-  order_type text not null default 'one_time' check (order_type in ('one_time', 'subscription_initial', 'subscription_renewal')),
-  status text default 'pending' check (status in ('pending', 'paid', 'failed', 'refunded', 'canceled')),
-  transaction_id text,
-  payment_method text,
-  paddle_transaction_id text unique,
-  paddle_checkout_id text,
-  metadata jsonb,
-  paid_at timestamptz,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
+alter table public.orders add column if not exists customer_id uuid references public.customers(id);
+alter table public.orders add column if not exists product_price_id bigint references public.product_prices(id);
+alter table public.orders add column if not exists currency text default 'USD';
+alter table public.orders add column if not exists order_type text default 'one_time';
+alter table public.orders add column if not exists paddle_transaction_id text;
+alter table public.orders add column if not exists paddle_checkout_id text;
+alter table public.orders add column if not exists paid_at timestamptz;
 
--- Subscriptions
+alter table public.orders
+  drop constraint if exists orders_order_type_check;
+alter table public.orders
+  add constraint orders_order_type_check check (order_type in ('one_time', 'subscription_initial', 'subscription_renewal'));
+
+alter table public.orders
+  drop constraint if exists orders_status_check;
+alter table public.orders
+  add constraint orders_status_check check (status in ('pending', 'paid', 'failed', 'refunded', 'canceled'));
+
+create unique index if not exists idx_orders_paddle_transaction_id_unique on public.orders(paddle_transaction_id) where paddle_transaction_id is not null;
+
 create table if not exists public.subscriptions (
   id uuid primary key default gen_random_uuid(),
   customer_id uuid not null references public.customers(id),
@@ -88,7 +92,6 @@ create table if not exists public.subscriptions (
   updated_at timestamptz default now()
 );
 
--- Webhook idempotency + audit
 create table if not exists public.webhook_events (
   id uuid primary key default gen_random_uuid(),
   provider text not null default 'paddle',
@@ -102,37 +105,22 @@ create table if not exists public.webhook_events (
   unique(provider, event_id)
 );
 
--- Indexes
 create index if not exists idx_product_prices_product_id on public.product_prices(product_id);
 create index if not exists idx_product_prices_active on public.product_prices(active);
-create index if not exists idx_orders_customer_email on public.orders(customer_email);
-create index if not exists idx_orders_status on public.orders(status);
 create index if not exists idx_orders_customer_id on public.orders(customer_id);
 create index if not exists idx_orders_product_price_id on public.orders(product_price_id);
 create index if not exists idx_subscriptions_status on public.subscriptions(status);
 create index if not exists idx_subscriptions_customer_id on public.subscriptions(customer_id);
 create index if not exists idx_webhook_events_processed on public.webhook_events(processed);
 
--- RLS
-alter table public.products enable row level security;
 alter table public.product_prices enable row level security;
 alter table public.customers enable row level security;
-alter table public.orders enable row level security;
 alter table public.subscriptions enable row level security;
 alter table public.webhook_events enable row level security;
-
--- Policies
-create policy if not exists "Public products are viewable by everyone"
-  on public.products for select
-  using (active = true);
 
 create policy if not exists "Public active product prices are viewable by everyone"
   on public.product_prices for select
   using (active = true);
-
-create policy if not exists "Orders are only accessible via service key"
-  on public.orders for all
-  using (false);
 
 create policy if not exists "Customers are only accessible via service key"
   on public.customers for all

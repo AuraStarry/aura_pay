@@ -19,6 +19,7 @@ type ProductCreateBody = {
   sku?: unknown;
   price?: unknown;
   currency?: unknown;
+  billing_mode?: unknown;
   active?: unknown;
   description?: unknown;
   metadata?: unknown;
@@ -30,6 +31,7 @@ type ProductUpdateBody = {
   sku?: unknown;
   price?: unknown;
   currency?: unknown;
+  billing_mode?: unknown;
   active?: unknown;
   description?: unknown;
   metadata?: unknown;
@@ -82,6 +84,10 @@ export async function POST(request: NextRequest) {
     const sku = requireString(body.sku, 'sku');
     const price = requireNumber(body.price, 'price');
     const currency = body.currency === undefined ? 'USD' : requireString(body.currency, 'currency');
+    const billingMode = body.billing_mode === undefined ? 'one_time' : requireString(body.billing_mode, 'billing_mode');
+    if (!['one_time', 'subscription'].includes(billingMode)) {
+      throw new HttpError(400, 'validation_error', 'Field `billing_mode` must be one of: one_time, subscription');
+    }
     const active = body.active === undefined ? true : optionalBoolean(body.active, 'active');
 
     const { data, error } = await supabase
@@ -92,6 +98,7 @@ export async function POST(request: NextRequest) {
         price,
         currency,
         active,
+        billing_mode: billingMode,
         description: body.description,
         metadata: body.metadata,
       })
@@ -133,6 +140,13 @@ export async function PATCH(request: NextRequest) {
     if (body.price !== undefined) updates.price = requireNumber(body.price, 'price');
     if (body.currency !== undefined) updates.currency = requireString(body.currency, 'currency');
     if (body.active !== undefined) updates.active = optionalBoolean(body.active, 'active');
+    if (body.billing_mode !== undefined) {
+      const billingMode = requireString(body.billing_mode, 'billing_mode');
+      if (!['one_time', 'subscription'].includes(billingMode)) {
+        throw new HttpError(400, 'validation_error', 'Field `billing_mode` must be one of: one_time, subscription');
+      }
+      updates.billing_mode = billingMode;
+    }
     if (body.description !== undefined) updates.description = body.description;
     if (body.metadata !== undefined) updates.metadata = body.metadata;
 

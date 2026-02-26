@@ -8,6 +8,7 @@ interface Product {
   sku: string;
   price: number;
   currency: string;
+  billing_mode: 'one_time' | 'subscription';
   active: boolean;
   description: string | null;
   metadata: any;
@@ -30,6 +31,7 @@ export default function AdminPage() {
     sku: '',
     price: 0,
     currency: 'USD',
+    billing_mode: 'one_time',
     active: true,
     description: '',
     metadata: {},
@@ -86,6 +88,7 @@ export default function AdminPage() {
       sku: product.sku,
       price: product.price,
       currency: product.currency,
+      billing_mode: product.billing_mode || 'one_time',
       active: product.active,
       description: product.description || '',
       metadata: product.metadata || {},
@@ -100,6 +103,7 @@ export default function AdminPage() {
       sku: '',
       price: 0,
       currency: 'USD',
+      billing_mode: 'one_time',
       active: true,
       description: '',
       metadata: {},
@@ -223,10 +227,14 @@ export default function AdminPage() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <input required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2 border rounded-lg" placeholder="Product Name" />
                   <input required value={formData.sku} onChange={(e) => setFormData({ ...formData, sku: e.target.value })} className="w-full px-4 py-2 border rounded-lg" placeholder="SKU" />
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-3 gap-4">
                     <input type="number" required step="0.01" min="0" value={formData.price} onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })} className="w-full px-4 py-2 border rounded-lg" />
                     <select value={formData.currency} onChange={(e) => setFormData({ ...formData, currency: e.target.value })} className="w-full px-4 py-2 border rounded-lg">
                       <option value="USD">USD</option><option value="TWD">TWD</option><option value="EUR">EUR</option><option value="GBP">GBP</option>
+                    </select>
+                    <select value={formData.billing_mode} onChange={(e) => setFormData({ ...formData, billing_mode: e.target.value as 'one_time' | 'subscription' })} className="w-full px-4 py-2 border rounded-lg">
+                      <option value="one_time">One-time</option>
+                      <option value="subscription">Subscription</option>
                     </select>
                   </div>
                   <textarea value={formData.description || ''} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full px-4 py-2 border rounded-lg" rows={3} placeholder="Description" />
@@ -256,13 +264,18 @@ export default function AdminPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead><tr className="bg-gray-50 border-b"><th className="text-left p-4">Product</th><th className="text-left p-4">SKU</th><th className="text-left p-4">Price</th><th className="text-left p-4">Status</th><th className="text-left p-4">Actions</th></tr></thead>
+                <thead><tr className="bg-gray-50 border-b"><th className="text-left p-4">Product</th><th className="text-left p-4">SKU</th><th className="text-left p-4">Price</th><th className="text-left p-4">Billing</th><th className="text-left p-4">Status</th><th className="text-left p-4">Actions</th></tr></thead>
                 <tbody>
                   {products.map((product) => (
                     <tr key={product.id} className="border-b hover:bg-gray-50">
                       <td className="p-4"><div className="font-medium">{product.name}</div>{product.description && <div className="text-sm text-gray-500">{product.description}</div>}</td>
                       <td className="p-4 font-mono text-sm">{product.sku}</td>
                       <td className="p-4 font-semibold">{product.currency} ${parseFloat(String(product.price)).toFixed(2)}</td>
+                      <td className="p-4">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.billing_mode === 'subscription' ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-100 text-slate-700'}`}>
+                          {product.billing_mode === 'subscription' ? 'Subscription' : 'One-time'}
+                        </span>
+                      </td>
                       <td className="p-4"><button onClick={() => toggleActive(product)} className={`px-3 py-1 rounded-full text-xs font-medium ${product.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>{product.active ? 'Active' : 'Inactive'}</button></td>
                       <td className="p-4"><div className="flex gap-2"><button onClick={() => handleEdit(product)} className="text-blue-600">Edit</button><button onClick={() => handleDelete(product.id)} className="text-red-600">Delete</button></div></td>
                     </tr>
