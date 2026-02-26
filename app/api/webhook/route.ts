@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { handleApiError, ok, requireString, safeJson } from '@/lib/api-contract';
+import { getRequestId, log } from '@/lib/logger';
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
@@ -13,6 +14,8 @@ type WebhookBody = {
 
 /** POST /api/webhook */
 export async function POST(request: NextRequest) {
+  const startedAt = Date.now();
+  const requestId = getRequestId(request.headers);
   try {
     const body = await safeJson<WebhookBody>(request);
 
@@ -33,8 +36,19 @@ export async function POST(request: NextRequest) {
 
     if (error) throw error;
 
+    log('info', 'api.webhook.post.success', 'Processed payment webhook', {
+      requestId,
+      route: '/api/webhook',
+      durationMs: Date.now() - startedAt,
+      context: { orderId, status },
+    });
+
     return ok({ success: true, order: data });
   } catch (error) {
-    return handleApiError(error, 'Failed to process webhook');
+    return handleApiError(error, 'Failed to process webhook', {
+      requestId,
+      route: '/api/webhook',
+      startedAt,
+    });
   }
 }

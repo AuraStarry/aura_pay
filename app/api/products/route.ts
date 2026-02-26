@@ -9,6 +9,7 @@ import {
   requireString,
   safeJson,
 } from '@/lib/api-contract';
+import { getRequestId, log } from '@/lib/logger';
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
@@ -37,6 +38,8 @@ type ProductDeleteBody = { id?: unknown };
 
 /** GET /api/products */
 export async function GET(request: NextRequest) {
+  const startedAt = Date.now();
+  const requestId = getRequestId(request.headers);
   try {
     const { searchParams } = new URL(request.url);
     const showAll = searchParams.get('all') === 'true';
@@ -47,14 +50,28 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query;
     if (error) throw error;
 
+    const durationMs = Date.now() - startedAt;
+    log('info', 'api.products.get.success', 'Fetched products', {
+      requestId,
+      route: '/api/products',
+      durationMs,
+      context: { count: (data ?? []).length },
+    });
+
     return ok({ products: data ?? [] });
   } catch (error) {
-    return handleApiError(error, 'Failed to fetch products');
+    return handleApiError(error, 'Failed to fetch products', {
+      requestId,
+      route: '/api/products',
+      startedAt,
+    });
   }
 }
 
 /** POST /api/products */
 export async function POST(request: NextRequest) {
+  const startedAt = Date.now();
+  const requestId = getRequestId(request.headers);
   try {
     const body = await safeJson<ProductCreateBody>(request);
 
@@ -79,14 +96,28 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) throw error;
+
+    log('info', 'api.products.post.success', 'Created product', {
+      requestId,
+      route: '/api/products',
+      durationMs: Date.now() - startedAt,
+      context: { productId: data.id, sku: data.sku },
+    });
+
     return ok({ product: data }, 201);
   } catch (error) {
-    return handleApiError(error, 'Failed to create product');
+    return handleApiError(error, 'Failed to create product', {
+      requestId,
+      route: '/api/products',
+      startedAt,
+    });
   }
 }
 
 /** PATCH /api/products */
 export async function PATCH(request: NextRequest) {
+  const startedAt = Date.now();
+  const requestId = getRequestId(request.headers);
   try {
     const body = await safeJson<ProductUpdateBody>(request);
     const id = requireString(body.id, 'id');
@@ -113,14 +144,28 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (error) throw error;
+
+    log('info', 'api.products.patch.success', 'Updated product', {
+      requestId,
+      route: '/api/products',
+      durationMs: Date.now() - startedAt,
+      context: { productId: data.id },
+    });
+
     return ok({ product: data });
   } catch (error) {
-    return handleApiError(error, 'Failed to update product');
+    return handleApiError(error, 'Failed to update product', {
+      requestId,
+      route: '/api/products',
+      startedAt,
+    });
   }
 }
 
 /** DELETE /api/products */
 export async function DELETE(request: NextRequest) {
+  const startedAt = Date.now();
+  const requestId = getRequestId(request.headers);
   try {
     const body = await safeJson<ProductDeleteBody>(request);
     const id = requireString(body.id, 'id');
@@ -128,8 +173,19 @@ export async function DELETE(request: NextRequest) {
     const { error } = await supabase.from('products').delete().eq('id', id);
     if (error) throw error;
 
+    log('info', 'api.products.delete.success', 'Deleted product', {
+      requestId,
+      route: '/api/products',
+      durationMs: Date.now() - startedAt,
+      context: { productId: id },
+    });
+
     return ok({ success: true });
   } catch (error) {
-    return handleApiError(error, 'Failed to delete product');
+    return handleApiError(error, 'Failed to delete product', {
+      requestId,
+      route: '/api/products',
+      startedAt,
+    });
   }
 }

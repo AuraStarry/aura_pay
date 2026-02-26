@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { HttpError, handleApiError, ok, requireNumber, requireString, safeJson } from '@/lib/api-contract';
+import { getRequestId, log } from '@/lib/logger';
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
@@ -13,6 +14,8 @@ type CheckoutBody = {
 
 /** POST /api/checkout */
 export async function POST(request: NextRequest) {
+  const startedAt = Date.now();
+  const requestId = getRequestId(request.headers);
   try {
     const body = await safeJson<CheckoutBody>(request);
 
@@ -49,6 +52,13 @@ export async function POST(request: NextRequest) {
 
     if (orderError) throw orderError;
 
+    log('info', 'api.checkout.post.success', 'Created checkout order', {
+      requestId,
+      route: '/api/checkout',
+      durationMs: Date.now() - startedAt,
+      context: { orderId: order.id, productId, quantity },
+    });
+
     return ok({
       order_id: order.id,
       amount: order.amount,
@@ -56,6 +66,10 @@ export async function POST(request: NextRequest) {
       status: 'pending',
     });
   } catch (error) {
-    return handleApiError(error, 'Failed to create checkout');
+    return handleApiError(error, 'Failed to create checkout', {
+      requestId,
+      route: '/api/checkout',
+      startedAt,
+    });
   }
 }
