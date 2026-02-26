@@ -28,6 +28,9 @@
 12. [x] 建立 staging→production 部署檢查清單
 13. [x] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
 14. [ ] Paddle webhook signature 驗證與事件映射（交易/訂閱）
+   - [x] Sub 1: 新增 Paddle webhook signature 驗證（`PADDLE_WEBHOOK_SECRET`）
+   - [ ] Sub 2: 建立 transaction/subscription 事件到 order/subscription 狀態映射
+   - [ ] Sub 3: 更新整合文檔與環境需求，並驗證 test/build
 15. [x] 對外串接文檔層（供其他產品快速整合）
 
 ---
