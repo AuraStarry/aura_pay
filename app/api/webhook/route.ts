@@ -1,48 +1,40 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { handleApiError, ok, requireString, safeJson } from '@/lib/api-contract';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_KEY!
-);
+const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
-/**
- * POST /api/webhook - 接收支付回調
- * 用於處理第三方支付服務的回調通知
- */
+type WebhookBody = {
+  order_id?: unknown;
+  status?: unknown;
+  transaction_id?: unknown;
+  payment_method?: unknown;
+};
+
+/** POST /api/webhook */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { order_id, status, transaction_id, payment_method } = body;
+    const body = await safeJson<WebhookBody>(request);
 
-    if (!order_id || !status) {
-      return NextResponse.json(
-        { error: 'Missing required fields: order_id, status' },
-        { status: 400 }
-      );
-    }
+    const orderId = requireString(body.order_id, 'order_id');
+    const status = requireString(body.status, 'status');
 
-    // 更新訂單狀態
     const { data, error } = await supabase
       .from('orders')
       .update({
         status,
-        transaction_id,
-        payment_method,
+        transaction_id: body.transaction_id,
+        payment_method: body.payment_method,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', order_id)
+      .eq('id', orderId)
       .select()
       .single();
 
     if (error) throw error;
 
-    return NextResponse.json({ success: true, order: data });
-  } catch (error: any) {
-    console.error('Error processing webhook:', error);
-    return NextResponse.json(
-      { error: 'Failed to process webhook' },
-      { status: 500 }
-    );
+    return ok({ success: true, order: data });
+  } catch (error) {
+    return handleApiError(error, 'Failed to process webhook');
   }
 }
