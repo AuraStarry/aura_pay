@@ -21,6 +21,8 @@ beforeEach(() => {
   vi.clearAllMocks();
   process.env.SUPABASE_URL = 'http://localhost:54321';
   process.env.SUPABASE_KEY = 'test-key';
+  process.env.ADMIN_READ_TOKEN = 'viewer-token';
+  process.env.ADMIN_WRITE_TOKEN = 'admin-token';
 
   chain.select.mockReturnValue(chain);
   chain.insert.mockReturnValue(chain);
@@ -37,7 +39,10 @@ describe('/api/products POST', () => {
     const req = new Request('http://localhost/api/products', {
       method: 'POST',
       body: JSON.stringify({}),
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        authorization: 'Bearer admin-token',
+      },
     });
 
     const res = await POST(req as any);
@@ -59,7 +64,10 @@ describe('/api/products POST', () => {
     const req = new Request('http://localhost/api/products', {
       method: 'POST',
       body: JSON.stringify({ name: 'Pro', sku: 'pro', price: 10 }),
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        authorization: 'Bearer admin-token',
+      },
     });
 
     const res = await POST(req as any);

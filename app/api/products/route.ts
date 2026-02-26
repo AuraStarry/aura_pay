@@ -10,6 +10,7 @@ import {
   safeJson,
 } from '@/lib/api-contract';
 import { getRequestId, log } from '@/lib/logger';
+import { requireRole } from '@/lib/admin-auth';
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
@@ -41,6 +42,7 @@ export async function GET(request: NextRequest) {
   const startedAt = Date.now();
   const requestId = getRequestId(request.headers);
   try {
+    const role = requireRole(request.headers, ['viewer', 'admin']);
     const { searchParams } = new URL(request.url);
     const showAll = searchParams.get('all') === 'true';
 
@@ -55,7 +57,7 @@ export async function GET(request: NextRequest) {
       requestId,
       route: '/api/products',
       durationMs,
-      context: { count: (data ?? []).length },
+      context: { count: (data ?? []).length, role },
     });
 
     return ok({ products: data ?? [] });
@@ -73,6 +75,7 @@ export async function POST(request: NextRequest) {
   const startedAt = Date.now();
   const requestId = getRequestId(request.headers);
   try {
+    requireRole(request.headers, ['admin']);
     const body = await safeJson<ProductCreateBody>(request);
 
     const name = requireString(body.name, 'name');
@@ -119,6 +122,7 @@ export async function PATCH(request: NextRequest) {
   const startedAt = Date.now();
   const requestId = getRequestId(request.headers);
   try {
+    requireRole(request.headers, ['admin']);
     const body = await safeJson<ProductUpdateBody>(request);
     const id = requireString(body.id, 'id');
 
@@ -167,6 +171,7 @@ export async function DELETE(request: NextRequest) {
   const startedAt = Date.now();
   const requestId = getRequestId(request.headers);
   try {
+    requireRole(request.headers, ['admin']);
     const body = await safeJson<ProductDeleteBody>(request);
     const id = requireString(body.id, 'id');
 
