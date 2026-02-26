@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #14 Paddle webhook signature 驗證與事件映射（交易/訂閱）
-- **最後更新**: 2026-02-26（完成 TODO #12 staging→production 部署檢查清單）
+- **DOING**: TODO #15 對外串接文檔層（供其他產品快速整合）
+- **最後更新**: 2026-02-26（新增對外整合文檔與維護策略任務）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -28,6 +28,10 @@
 12. [x] 建立 staging→production 部署檢查清單
 13. [x] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
 14. [ ] Paddle webhook signature 驗證與事件映射（交易/訂閱）
+15. [ ] 對外串接文檔層（供其他產品快速整合）
+   - [x] Sub 1: 建立 `docs/INTEGRATION_API.md`（Auth、核心流程、API 合約、錯誤碼）
+   - [ ] Sub 2: 建立 `docs/INTEGRATION_CHANGE_POLICY.md`（異動分級、必改文件、版本標記）
+   - [ ] Sub 3: 在 README / PROJECT 明確宣告「API 或 schema 異動必同步維護串接文檔」
 
 ---
 
