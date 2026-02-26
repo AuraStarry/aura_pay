@@ -23,7 +23,7 @@
 9. [ ] 補齊 `.env.example` 說明欄位與部署必要變數對照
    - [x] Sub 1: 重寫 `.env.example`（區分 required/optional，加入 Paddle 預留變數）
    - [x] Sub 2: 更新 README 的環境變數與部署段落（對齊現況 response contract）
-   - [ ] Sub 3: 新增 `docs/ENVIRONMENT.md` 作為單一變數對照表並驗證 build
+   - [x] Sub 3: 新增 `docs/ENVIRONMENT.md` 作為單一變數對照表並驗證 build
 
 ### 🚀 上線品質（下一階段）
 10. [ ] 加入基本監控與錯誤追蹤（至少 server log 結構化）
