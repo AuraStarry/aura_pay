@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { handleApiError, ok, requireNumber, requireString, safeJson } from '@/lib/api-contract';
-import { requireRole } from '@/lib/admin-auth';
 import { getRequestId, log } from '@/lib/logger';
+import { requireServiceToken } from '@/lib/service-auth';
+import { enforceRateLimit } from '@/lib/rate-limit';
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
@@ -18,7 +19,18 @@ export async function POST(request: NextRequest) {
   const requestId = getRequestId(request.headers);
 
   try {
-    requireRole(request.headers, ['viewer', 'admin']);
+    const serviceToken = requireServiceToken(request.headers, 'ACCESS_API_TOKEN');
+
+    const forwardedFor = request.headers.get('x-forwarded-for') || 'unknown';
+    const ip = forwardedFor.split(',')[0]?.trim() || 'unknown';
+    const rateLimitPerMin = Number(process.env.ACCESS_API_RATE_LIMIT_PER_MIN || 120);
+
+    enforceRateLimit({
+      key: `access:${serviceToken}:${ip}`,
+      limit: rateLimitPerMin,
+      windowMs: 60_000,
+    });
+
     const body = await safeJson<AccessBody>(request);
 
     const customerEmail = requireString(body.customer_email, 'customer_email');
