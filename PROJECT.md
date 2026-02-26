@@ -5,7 +5,7 @@
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
 - **DOING**: TODO #13 Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
-- **最後更新**: 2026-02-26（啟動 Paddle-first 最小資料模型實作）
+- **最後更新**: 2026-02-26（完成 Sub 3：checkout/webhook 對齊新模型）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -29,7 +29,7 @@
 13. [ ] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
    - [x] Sub 1: 定稿最小資料結構與欄位規則（避免過度設計）
    - [x] Sub 2: 產出完整 schema.sql（fresh setup）與增量 migration（existing project）
-   - [ ] Sub 3: API 對齊新模型（checkout/webhook 先支援 price/customer/event idempotency）
+   - [x] Sub 3: API 對齊新模型（checkout/webhook 先支援 price/customer/event idempotency）
    - [ ] Sub 4: 管理介面與測試樣本更新（products + prices）
 
 ---
@@ -50,7 +50,7 @@
 - **監控狀態**：API 已有結構化 log（level/event/requestId/route/durationMs）與統一錯誤記錄
 - **權限狀態**：`/api/products` 已套用 viewer/admin token role gate；`/admin` 改走受保護 API token 流程
 - **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md` 已對齊目前 MVP + Paddle 預留變數
-- **Paddle 模型狀態**：已產出新 `schema.sql` 與 `sql/2026-02-26_paddle_minimal_model.sql`（尚未套用到正式 DB）
+- **Paddle 模型狀態**：`sql/2026-02-26_paddle_minimal_model.sql` 已在 Supabase 套用成功；`checkout/webhook` 已對齊 price/customer/idempotency
 
 ## 產品目標（當前版本）
 

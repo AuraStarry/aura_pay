@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const chain = {
   select: vi.fn(),
   insert: vi.fn(),
+  upsert: vi.fn(),
   eq: vi.fn(),
   single: vi.fn(),
 };
@@ -20,6 +21,7 @@ beforeEach(() => {
 
   chain.select.mockReturnValue(chain);
   chain.insert.mockReturnValue(chain);
+  chain.upsert.mockReturnValue(chain);
   chain.eq.mockReturnValue(chain);
   from.mockReturnValue(chain);
 });
@@ -30,7 +32,7 @@ describe('/api/checkout POST', () => {
 
     const req = new Request('http://localhost/api/checkout', {
       method: 'POST',
-      body: JSON.stringify({ product_id: 'p1', customer_email: 'a@a.com', quantity: 0 }),
+      body: JSON.stringify({ product_price_id: 1, customer_email: 'a@a.com', quantity: 0 }),
       headers: { 'content-type': 'application/json' },
     });
 
@@ -42,14 +44,14 @@ describe('/api/checkout POST', () => {
     expect(body.error.code).toBe('validation_error');
   });
 
-  it('returns 404 when product not found', async () => {
+  it('returns 404 when product price not found', async () => {
     const { POST } = await import('@/app/api/checkout/route');
 
     chain.single.mockResolvedValueOnce({ data: null, error: { message: 'not found' } });
 
     const req = new Request('http://localhost/api/checkout', {
       method: 'POST',
-      body: JSON.stringify({ product_id: 'p1', customer_email: 'a@a.com' }),
+      body: JSON.stringify({ product_price_id: 1, customer_email: 'a@a.com' }),
       headers: { 'content-type': 'application/json' },
     });
 
@@ -65,12 +67,13 @@ describe('/api/checkout POST', () => {
     const { POST } = await import('@/app/api/checkout/route');
 
     chain.single
-      .mockResolvedValueOnce({ data: { id: 'p1', price: 20, currency: 'USD' }, error: null })
-      .mockResolvedValueOnce({ data: { id: 'o1', amount: 40 }, error: null });
+      .mockResolvedValueOnce({ data: { id: 1, product_id: 10, billing_type: 'one_time', unit_amount: 20, currency: 'USD' }, error: null })
+      .mockResolvedValueOnce({ data: { id: 'c1', email: 'a@a.com' }, error: null })
+      .mockResolvedValueOnce({ data: { id: 'o1', amount: 40, currency: 'USD' }, error: null });
 
     const req = new Request('http://localhost/api/checkout', {
       method: 'POST',
-      body: JSON.stringify({ product_id: 'p1', customer_email: 'a@a.com', quantity: 2 }),
+      body: JSON.stringify({ product_price_id: 1, customer_email: 'a@a.com', quantity: 2 }),
       headers: { 'content-type': 'application/json' },
     });
 
