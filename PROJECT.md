@@ -26,6 +26,9 @@
 10. [x] 加入基本監控與錯誤追蹤（至少 server log 結構化）
 11. [x] 補 admin 存取保護（Auth / role gate）
 12. [ ] 建立 staging→production 部署檢查清單
+   - [x] Sub 1: 產出 `docs/DEPLOY_CHECKLIST.md`（staging / production gate）
+   - [ ] Sub 2: README 補上部署檢查清單入口與最小上線流程
+   - [ ] Sub 3: 以當前模型驗證 checklist 覆蓋面並更新 PROJECT 狀態
 13. [x] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
 
 ---
