@@ -30,7 +30,7 @@
 14. [ ] Paddle webhook signature 驗證與事件映射（交易/訂閱）
 15. [ ] 對外串接文檔層（供其他產品快速整合）
    - [x] Sub 1: 建立 `docs/INTEGRATION_API.md`（Auth、核心流程、API 合約、錯誤碼）
-   - [ ] Sub 2: 建立 `docs/INTEGRATION_CHANGE_POLICY.md`（異動分級、必改文件、版本標記）
+   - [x] Sub 2: 建立 `docs/INTEGRATION_CHANGE_POLICY.md`（異動分級、必改文件、版本標記）
    - [ ] Sub 3: 在 README / PROJECT 明確宣告「API 或 schema 異動必同步維護串接文檔」
 
 ---

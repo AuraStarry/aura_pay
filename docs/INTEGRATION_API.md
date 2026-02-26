@@ -1,5 +1,6 @@
 # INTEGRATION_API.md — Aura Pay Integration Guide
 
+> Integration Contract Version: v2026.02.26-1
 > 給其他產品串接 Aura Pay 的單一入口文件。
 
 ## 1) Authentication
