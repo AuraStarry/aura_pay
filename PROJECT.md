@@ -25,6 +25,9 @@
 ### 🚀 上線品質（下一階段）
 10. [x] 加入基本監控與錯誤追蹤（至少 server log 結構化）
 11. [ ] 補 admin 存取保護（Auth / role gate）
+   - [x] Sub 1: 建立 admin token auth helper（viewer/admin 角色）
+   - [ ] Sub 2: 套用 `/api/products` role gate（GET=viewer+ / mutate=admin）
+   - [ ] Sub 3: 調整 `/admin` 使用受保護 API + token 流程，並驗證 test/build
 12. [ ] 建立 staging→production 部署檢查清單
 
 ---
