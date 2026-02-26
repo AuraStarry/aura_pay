@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #15 對外串接文檔層（供其他產品快速整合）
-- **最後更新**: 2026-02-26（新增對外整合文檔與維護策略任務）
+- **DOING**: TODO #14 Paddle webhook signature 驗證與事件映射（交易/訂閱）
+- **最後更新**: 2026-02-26（完成 TODO #15 對外串接文檔層）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -28,10 +28,7 @@
 12. [x] 建立 staging→production 部署檢查清單
 13. [x] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
 14. [ ] Paddle webhook signature 驗證與事件映射（交易/訂閱）
-15. [ ] 對外串接文檔層（供其他產品快速整合）
-   - [x] Sub 1: 建立 `docs/INTEGRATION_API.md`（Auth、核心流程、API 合約、錯誤碼）
-   - [x] Sub 2: 建立 `docs/INTEGRATION_CHANGE_POLICY.md`（異動分級、必改文件、版本標記）
-   - [ ] Sub 3: 在 README / PROJECT 明確宣告「API 或 schema 異動必同步維護串接文檔」
+15. [x] 對外串接文檔層（供其他產品快速整合）
 
 ---
 
@@ -50,7 +47,7 @@
 - **建置狀態**：`npm run build` 成功（2026-02-26），`npm test`（Vitest，products+checkout）通過
 - **監控狀態**：API 已有結構化 log（level/event/requestId/route/durationMs）與統一錯誤記錄
 - **權限狀態**：`/api/products` 已套用 viewer/admin token role gate；`/admin` 改走受保護 API token 流程
-- **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md`、`docs/DEPLOY_CHECKLIST.md` 已對齊目前 MVP + 上線流程
+- **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md`、`docs/DEPLOY_CHECKLIST.md`、`docs/INTEGRATION_API.md`、`docs/INTEGRATION_CHANGE_POLICY.md` 已對齊目前 MVP + 上線流程
 - **Paddle 模型狀態**：`sql/2026-02-26_paddle_minimal_model.sql` 已在 Supabase 套用成功；`checkout/webhook` 已對齊 price/customer/idempotency
 - **Admin 狀態**：新增 `/api/product-prices`，`/admin` 已支援 Product + Default Price 建立與價格列表顯示
 

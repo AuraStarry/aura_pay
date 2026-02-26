@@ -232,7 +232,8 @@ Payment gateway webhook callback.
 4. Deploy
 
 For full variable definitions and deployment mapping, see `docs/ENVIRONMENT.md`.
-Before promoting staging to production, run `docs/DEPLOY_CHECKLIST.md` end-to-end. 
+Before promoting staging to production, run `docs/DEPLOY_CHECKLIST.md` end-to-end.
+For downstream product integration, use `docs/INTEGRATION_API.md` and follow `docs/INTEGRATION_CHANGE_POLICY.md`. 
 
 ## Database Schema
 
