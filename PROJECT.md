@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #10 加入基本監控與錯誤追蹤（至少 server log 結構化）
-- **最後更新**: 2026-02-26（完成 TODO #9 環境變數文件與部署對照）
+- **DOING**: TODO #11 補 admin 存取保護（Auth / role gate）
+- **最後更新**: 2026-02-26（完成 TODO #10 結構化 logging 與 request telemetry）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -23,10 +23,7 @@
 9. [x] 補齊 `.env.example` 說明欄位與部署必要變數對照
 
 ### 🚀 上線品質（下一階段）
-10. [ ] 加入基本監控與錯誤追蹤（至少 server log 結構化）
-   - [x] Sub 1: 建立共用結構化 logger（level/event/context/error）
-   - [x] Sub 2: 套用到 API error handling 與主要路由（products/checkout/webhook）
-   - [ ] Sub 3: 補上 request-id 與基本 latency log，並驗證 test/build
+10. [x] 加入基本監控與錯誤追蹤（至少 server log 結構化）
 11. [ ] 補 admin 存取保護（Auth / role gate）
 12. [ ] 建立 staging→production 部署檢查清單
 
@@ -45,6 +42,7 @@
   - `05a05d1` Add payment dashboard with stats and order listing
   - `8efc56c` Initial commit: Aura Pay API with Supabase + Vercel
 - **建置狀態**：`npm run build` 成功（2026-02-26），`npm test`（Vitest，products+checkout）通過
+- **監控狀態**：API 已有結構化 log（level/event/requestId/route/durationMs）與統一錯誤記錄
 - **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md` 已對齊目前 MVP + Paddle 預留變數
 
 ## 產品目標（當前版本）
