@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #16 建立對外授權查詢 API（給其他產品做 access check）
-- **最後更新**: 2026-02-26（完成 TODO #14 webhook signature + event mapping）
+- **DOING**: TODO #17 對外授權查詢 API 安全強化（獨立 service token + rate limit 策略）
+- **最後更新**: 2026-02-26（完成 TODO #16 access check API + 串接文檔）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -29,10 +29,8 @@
 13. [x] Paddle 資料模型落地（products/prices/customers/subscriptions/webhook_events）
 14. [x] Paddle webhook signature 驗證與事件映射（交易/訂閱）
 15. [x] 對外串接文檔層（供其他產品快速整合）
-16. [ ] 建立對外授權查詢 API（給其他產品做 access check）
-   - [x] Sub 1: 新增 `/api/access` 查詢端點（email + product 維度）
-   - [x] Sub 2: 文件化授權查詢 contract（request/response + access 判斷規則）
-   - [ ] Sub 3: 驗證 build 並更新 PROJECT 狀態
+16. [x] 建立對外授權查詢 API（給其他產品做 access check）
+17. [ ] 對外授權查詢 API 安全強化（獨立 service token + rate limit 策略）
 
 ---
 
@@ -52,6 +50,7 @@
 - **監控狀態**：API 已有結構化 log（level/event/requestId/route/durationMs）與統一錯誤記錄
 - **權限狀態**：`/api/products` 已套用 viewer/admin token role gate；`/admin` 改走受保護 API token 流程
 - **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md`、`docs/DEPLOY_CHECKLIST.md`、`docs/INTEGRATION_API.md`、`docs/INTEGRATION_CHANGE_POLICY.md` 已對齊目前 MVP + 上線流程
+- **授權查詢狀態**：新增 `/api/access`，可供其他產品以 email + product 維度查 `has_access`（subscription/paid order）
 - **Paddle 模型狀態**：`sql/2026-02-26_paddle_minimal_model.sql` 已在 Supabase 套用成功；`checkout/webhook` 已對齊 price/customer/idempotency + signature verification + 事件映射
 - **Admin 狀態**：新增 `/api/product-prices`，`/admin` 已支援 Product + Default Price 建立與價格列表顯示
 
