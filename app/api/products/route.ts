@@ -1,88 +1,108 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import {
+  HttpError,
+  handleApiError,
+  ok,
+  optionalBoolean,
+  requireNumber,
+  requireString,
+  safeJson,
+} from '@/lib/api-contract';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_KEY!
-);
+const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
-/**
- * GET /api/products - 取得所有產品
- * Query: ?all=true (include inactive products)
- */
+type ProductCreateBody = {
+  name?: unknown;
+  sku?: unknown;
+  price?: unknown;
+  currency?: unknown;
+  active?: unknown;
+  description?: unknown;
+  metadata?: unknown;
+};
+
+type ProductUpdateBody = {
+  id?: unknown;
+  name?: unknown;
+  sku?: unknown;
+  price?: unknown;
+  currency?: unknown;
+  active?: unknown;
+  description?: unknown;
+  metadata?: unknown;
+};
+
+type ProductDeleteBody = { id?: unknown };
+
+/** GET /api/products */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const showAll = searchParams.get('all') === 'true';
 
     let query = supabase.from('products').select('*');
-
-    if (!showAll) {
-      query = query.eq('active', true);
-    }
+    if (!showAll) query = query.eq('active', true);
 
     const { data, error } = await query;
-
     if (error) throw error;
 
-    return NextResponse.json({ products: data });
-  } catch (error: any) {
-    console.error('Error fetching products:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch products' },
-      { status: 500 }
-    );
+    return ok({ products: data ?? [] });
+  } catch (error) {
+    return handleApiError(error, 'Failed to fetch products');
   }
 }
 
-/**
- * POST /api/products - 建立新產品
- * Body: { name, sku, price, currency, active, description, metadata }
- */
+/** POST /api/products */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, sku, price, currency = 'USD', active = true, description, metadata } = body;
+    const body = await safeJson<ProductCreateBody>(request);
 
-    if (!name || !sku || price === undefined) {
-      return NextResponse.json(
-        { error: 'Missing required fields: name, sku, price' },
-        { status: 400 }
-      );
-    }
+    const name = requireString(body.name, 'name');
+    const sku = requireString(body.sku, 'sku');
+    const price = requireNumber(body.price, 'price');
+    const currency = body.currency === undefined ? 'USD' : requireString(body.currency, 'currency');
+    const active = body.active === undefined ? true : optionalBoolean(body.active, 'active');
 
     const { data, error } = await supabase
       .from('products')
-      .insert({ name, sku, price, currency, active, description, metadata })
+      .insert({
+        name,
+        sku,
+        price,
+        currency,
+        active,
+        description: body.description,
+        metadata: body.metadata,
+      })
       .select()
       .single();
 
     if (error) throw error;
-
-    return NextResponse.json({ product: data }, { status: 201 });
-  } catch (error: any) {
-    console.error('Error creating product:', error);
-    return NextResponse.json(
-      { error: 'Failed to create product' },
-      { status: 500 }
-    );
+    return ok({ product: data }, 201);
+  } catch (error) {
+    return handleApiError(error, 'Failed to create product');
   }
 }
 
-/**
- * PATCH /api/products/:id - 更新產品
- * Body: { name?, sku?, price?, currency?, active?, description?, metadata? }
- */
+/** PATCH /api/products */
 export async function PATCH(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { id, ...updates } = body;
+    const body = await safeJson<ProductUpdateBody>(request);
+    const id = requireString(body.id, 'id');
 
-    if (!id) {
-      return NextResponse.json(
-        { error: 'Missing product id' },
-        { status: 400 }
-      );
+    const updates: Record<string, unknown> = {};
+
+    if (body.name !== undefined) updates.name = requireString(body.name, 'name');
+    if (body.sku !== undefined) updates.sku = requireString(body.sku, 'sku');
+    if (body.price !== undefined) updates.price = requireNumber(body.price, 'price');
+    if (body.currency !== undefined) updates.currency = requireString(body.currency, 'currency');
+    if (body.active !== undefined) updates.active = optionalBoolean(body.active, 'active');
+    if (body.description !== undefined) updates.description = body.description;
+    if (body.metadata !== undefined) updates.metadata = body.metadata;
+
+    if (Object.keys(updates).length === 0) {
+      throw new HttpError(400, 'validation_error', 'No updates provided');
     }
 
     const { data, error } = await supabase
@@ -93,46 +113,23 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (error) throw error;
-
-    return NextResponse.json({ product: data });
-  } catch (error: any) {
-    console.error('Error updating product:', error);
-    return NextResponse.json(
-      { error: 'Failed to update product' },
-      { status: 500 }
-    );
+    return ok({ product: data });
+  } catch (error) {
+    return handleApiError(error, 'Failed to update product');
   }
 }
 
-/**
- * DELETE /api/products/:id - 刪除產品
- * Body: { id }
- */
+/** DELETE /api/products */
 export async function DELETE(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { id } = body;
+    const body = await safeJson<ProductDeleteBody>(request);
+    const id = requireString(body.id, 'id');
 
-    if (!id) {
-      return NextResponse.json(
-        { error: 'Missing product id' },
-        { status: 400 }
-      );
-    }
-
-    const { error } = await supabase
-      .from('products')
-      .delete()
-      .eq('id', id);
-
+    const { error } = await supabase.from('products').delete().eq('id', id);
     if (error) throw error;
 
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error('Error deleting product:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete product' },
-      { status: 500 }
-    );
+    return ok({ success: true });
+  } catch (error) {
+    return handleApiError(error, 'Failed to delete product');
   }
 }
