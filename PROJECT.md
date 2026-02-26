@@ -32,7 +32,7 @@
 16. [x] 建立對外授權查詢 API（給其他產品做 access check）
 17. [ ] 對外授權查詢 API 安全強化（獨立 service token + rate limit 策略）
    - [x] Sub 1: `/api/access` 改為獨立 service token 驗證（不共用 admin token）
-   - [ ] Sub 2: 加入輕量 rate limit（per token/IP）與超限錯誤碼
+   - [x] Sub 2: 加入輕量 rate limit（per token/IP）與超限錯誤碼
    - [ ] Sub 3: 更新整合文檔與 env 範本，驗證 test/build
 
 ---
