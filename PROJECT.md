@@ -4,8 +4,8 @@
 
 ## ⚡ 快速入口
 - **階段**: Phase 1 — MVP 穩定化
-- **DOING**: TODO #9 補齊 `.env.example` 說明欄位與部署必要變數對照
-- **最後更新**: 2026-02-26（完成 TODO #8 最小測試集）
+- **DOING**: TODO #10 加入基本監控與錯誤追蹤（至少 server log 結構化）
+- **最後更新**: 2026-02-26（完成 TODO #9 環境變數文件與部署對照）
 
 ## 📋 當前 Phase TODO（按開發順序）
 
@@ -20,10 +20,7 @@
 6. [x] 套件版本清理：對齊 `next` 與 `@next/swc` 版本，消除 build warning
 7. [x] 補 API 合約驗證（request body validation / error shape 統一）
 8. [x] 建立最小測試集（至少涵蓋 products + checkout）
-9. [ ] 補齊 `.env.example` 說明欄位與部署必要變數對照
-   - [x] Sub 1: 重寫 `.env.example`（區分 required/optional，加入 Paddle 預留變數）
-   - [x] Sub 2: 更新 README 的環境變數與部署段落（對齊現況 response contract）
-   - [x] Sub 3: 新增 `docs/ENVIRONMENT.md` 作為單一變數對照表並驗證 build
+9. [x] 補齊 `.env.example` 說明欄位與部署必要變數對照
 
 ### 🚀 上線品質（下一階段）
 10. [ ] 加入基本監控與錯誤追蹤（至少 server log 結構化）
@@ -45,6 +42,7 @@
   - `05a05d1` Add payment dashboard with stats and order listing
   - `8efc56c` Initial commit: Aura Pay API with Supabase + Vercel
 - **建置狀態**：`npm run build` 成功（2026-02-26），`npm test`（Vitest，products+checkout）通過
+- **文件狀態**：`.env.example`、`README.md`、`docs/ENVIRONMENT.md` 已對齊目前 MVP + Paddle 預留變數
 
 ## 產品目標（當前版本）
 
