@@ -19,6 +19,9 @@
 ### ✅ 穩定化（近期優先）
 6. [x] 套件版本清理：對齊 `next` 與 `@next/swc` 版本，消除 build warning
 7. [ ] 補 API 合約驗證（request body validation / error shape 統一）
+   - [x] Sub 1: 建立共用 API response contract 與驗證 helper
+   - [ ] Sub 2: 套用到 `/api/products`（GET/POST/PATCH/DELETE）
+   - [ ] Sub 3: 套用到 `/api/checkout`、`/api/webhook` 並完成 build 驗證
 8. [ ] 建立最小測試集（至少涵蓋 products + checkout）
 9. [ ] 補齊 `.env.example` 說明欄位與部署必要變數對照
 
