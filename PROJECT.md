@@ -31,7 +31,7 @@
 15. [x] 對外串接文檔層（供其他產品快速整合）
 16. [ ] 建立對外授權查詢 API（給其他產品做 access check）
    - [x] Sub 1: 新增 `/api/access` 查詢端點（email + product 維度）
-   - [ ] Sub 2: 文件化授權查詢 contract（request/response + access 判斷規則）
+   - [x] Sub 2: 文件化授權查詢 contract（request/response + access 判斷規則）
    - [ ] Sub 3: 驗證 build 並更新 PROJECT 狀態
 
 ---

@@ -1,6 +1,6 @@
 # INTEGRATION_API.md — Aura Pay Integration Guide
 
-> Integration Contract Version: v2026.02.26-2
+> Integration Contract Version: v2026.02.26-3
 > 給其他產品串接 Aura Pay 的單一入口文件。
 
 ## 1) Authentication
@@ -36,6 +36,37 @@ Common error codes:
 - `internal_error`
 
 ## 3) Core API Endpoints
+
+## 3.0 Access Check (for downstream products)
+
+### POST `/api/access`
+- Role: viewer/admin (service-to-service recommended)
+- Purpose: check whether a user currently has valid access
+- Matching priority:
+  1) active/trialing subscription
+  2) paid order
+- Request:
+```json
+{
+  "customer_email": "user@example.com",
+  "product_id": 1,
+  "product_price_id": 12
+}
+```
+(`product_id` / `product_price_id` optional; if omitted, checks any paid/active entitlement for this customer.)
+- Response:
+```json
+{
+  "ok": true,
+  "data": {
+    "has_access": true,
+    "reason": "matched_paid_state",
+    "customer_email": "user@example.com",
+    "matched_subscription": { "id": "...", "status": "active" },
+    "matched_order": null
+  }
+}
+```
 
 ## 3.1 Products
 
