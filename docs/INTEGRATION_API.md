@@ -1,6 +1,6 @@
 # INTEGRATION_API.md — Aura Pay Integration Guide
 
-> Integration Contract Version: v2026.02.26-3
+> Integration Contract Version: v2026.02.26-4
 > 給其他產品串接 Aura Pay 的單一入口文件。
 
 ## 1) Authentication
@@ -13,7 +13,7 @@ All protected routes require Bearer token:
 Example header:
 
 ```http
-Authorization: Bearer <ADMIN_READ_TOKEN or ADMIN_WRITE_TOKEN>
+Authorization: Bearer <SERVICE_OR_ADMIN_TOKEN>
 Content-Type: application/json
 ```
 
@@ -40,8 +40,9 @@ Common error codes:
 ## 3.0 Access Check (for downstream products)
 
 ### POST `/api/access`
-- Role: viewer/admin (service-to-service recommended)
+- Auth: dedicated bearer token (`ACCESS_API_TOKEN`)
 - Purpose: check whether a user currently has valid access
+- Rate limit: `ACCESS_API_RATE_LIMIT_PER_MIN` per token+ip (default 120/min)
 - Matching priority:
   1) active/trialing subscription
   2) paid order

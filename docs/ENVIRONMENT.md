@@ -12,6 +12,8 @@ This file is the single reference for environment variables across local develop
 | `NEXT_PUBLIC_SUPABASE_KEY` | Client+Server | Yes | Supabase anon/public key used by frontend |
 | `ADMIN_READ_TOKEN` | Server | Yes | Bearer token for read-only admin product access |
 | `ADMIN_WRITE_TOKEN` | Server | Yes | Bearer token for product mutations (admin role) |
+| `ACCESS_API_TOKEN` | Server | Yes (if `/api/access` exposed) | Dedicated service token for downstream access-check API |
+| `ACCESS_API_RATE_LIMIT_PER_MIN` | Server | Optional | Rate limit for `/api/access` per token+ip (default 120) |
 
 ## 2) Paddle phase (partially wired: webhook signature + event mapping live)
 
